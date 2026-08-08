@@ -5,7 +5,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 
-namespace DotsLookupGenerator
+namespace Doject
 {
     [Generator]
     public class JobLookupInjectorGenerator : ISourceGenerator
