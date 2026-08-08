@@ -1,0 +1,47 @@
+## --- Результаты сборки (компиляции) ---
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Xx]64/
+[Xx]86/
+[Aa]rm/
+[Aa]rm64/
+bbin/
+obj/
+
+## --- Специфичные папки Visual Studio ---
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+## --- Локальные настройки и секреты (не для коммитов) ---
+*.userprefs
+appsettings.Development.json
+*.local.settings.json
+.env
+.env.*
+
+## --- Кэш пакетов (восстанавливаются через dotnet restore) ---
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+## --- Логи ---
+*.log
+*.log.*
+
+## --- Другие IDE (JetBrains Rider и VS Code) ---
+.idea/
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+*.sln.iml
+
+## --- Операционная система ---
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
