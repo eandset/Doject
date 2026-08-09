@@ -146,7 +146,7 @@ using UnityEngine;
 [AutoInjectSystem]
 public partial struct AtrTestSystem : ISystem
 {
-    private void OnSystemUpdate(ref SystemState state)
+    partial void OnSystemUpdate(ref SystemState state)
     {
         new AtrTestJob(ref _atrTestJobCache).Schedule();
     }
@@ -185,6 +185,9 @@ public partial struct AtrTestSystem : ISystem
 - `[IgnoreInjectAttribute]` - атрибут для исключения лукапа из инжекта
 - Меньше технического кода
 
+## Ограничения атрибута `[AutoInjectSystem]`
+- Необходимо использовать именно `partial OnSystemCreate` и `partial OnSystemUpdate` (`OnDestroy` по-прежнему можно использовать)
+
 ## Принцип работы
 1. **Как работает `[AutoInject]` (на уровне Джобы)**
 
@@ -199,18 +202,16 @@ public partial struct AtrTestSystem : ISystem
 - `ISystem.OnCreate`: Автоматически вызывает `.Init(ref state)` для всех кэшей джоб, а затем передает управление в `OnSystemCreate`.
 - `ISystem.OnUpdate`: Автоматически вызывает `.Update(ref state)` для всех кэшей джоб, после чего передает управление в `OnSystemUpdate`.
 
-### Итоговый поток выполнения в рантайме:
+### Итоговый поток выполнения в рантайме
 1. **Unity** вызывает `ISystem.OnUpdate` $\rightarrow$
 2. Фреймворк обновляет кэши: Вызывает `Update(ref state)` для всех `ComponentLookup` $\rightarrow$
 3. Вызывается `OnSystemUpdate`: где можно создать джобу и передать в нее кэш new `MyJob(ref _myJobCache)` $\rightarrow$
 4. Джоба получает свежие лукапы и безопасно планируется через `.Schedule()` или `.SheduleParallel()` с поддержкой очереди `state.Dependency` (`JobHandle`).
 
-## Ограничения атрибута `[AutoInjectSystem]`
-- Необходимо использовать именно `OnSystemCreate` и `OnSystemUpdate` (`OnDestroy` по-прежнему можно использовать)
-
 ## Установка и использование в Unity
 > Source Generator поставляется в виде обычного C# Roslyn-генератора (.dll), который подключается к проекту Unity через Assembly Definition или директорию Plugins.
 ### Сборка проекта генератора
+> Можете просто скачать бинарники с _Releases_ на _GitHub_
 1. Откройте проект генератора в вашей IDE (Rider / Visual Studio).
 2. Убедитесь, что таргет-фреймворк проекта указан как `netstandard2.0` (требование Unity к Roslyn Analyzer). 
 3. Соберите проект в режиме _Release_:
@@ -226,3 +227,15 @@ dotnet build -c Release
    - Перейдите в категорию Asset Labels (иконка ярлыка внизу Inspector) или в настройки Plugin Inspector:
    - Добавьте плагину метку: RoslynAnalyzer.
 3. Нажмите Apply.
+
+## Таск-лист
+- [x] Инекция лукапов в `IJobEntity`
+- [x] Авто-обновление кеша с совместной генерацией лукапов для `IJobEntity` в системах
+- [ ] Упрощенный доступ к `EntityCommandBuffer` и авто ожидание в `OnCreate`
+- [ ] Использование обычных или _partial_ `OnCreate` и `OnUpdate` при `[AutoInjectSystem]`
+- [ ] Поддержка переименования `IJobEntity` (автоматическое обновление названия кеша)
+- [ ] Поддержка `[AutoInjectSystem]` с `IJobEntity` которые находятся все системы, но используются в системе _(In progress)_
+
+---
+### Что еще планируется в качестве дополнений (отдельные DLL)
+- [ ] Интрументы для работы с физическими событиями _(In progress)_
