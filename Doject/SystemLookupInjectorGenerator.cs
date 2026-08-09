@@ -86,8 +86,6 @@ using Unity.Entities;
 {indent}{{
 {cacheFieldsSb.ToString().TrimEnd()}
 
-{indent}    partial void OnSystemCreate(ref SystemState state);
-
 {indent}    public void OnCreate(ref SystemState state)
 {indent}    {{
 {initCacheSb.ToString().TrimEnd()}
